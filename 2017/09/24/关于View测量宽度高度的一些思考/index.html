@@ -53,7 +53,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="ListView, CheckBox, 混乱" />
+  <meta name="keywords" content="Android, Measure, 高度, 宽度" />
 
 
 
@@ -69,18 +69,20 @@
 
 
 
-<meta name="description" content="Android中ListView、CheckBox状态混乱解决方式">
-<meta name="keywords" content="ListView, CheckBox, 混乱">
+<meta name="description" content="在做一个平铺效果时，遇到了问题：LinearLayout包含GridView，当GridView的数据源变多时，LinearLayout平铺展开。但是对展开后的高度测量错误导致，展开过多，导致下方很大一片空白。 整个布局大致描述如下：RecycleView的item布局是LinearLayout包含一个GridView，这里的GridView是重写了onMeasure的。 在分析问题之前，先说说关">
+<meta name="keywords" content="Android, Measure, 高度, 宽度">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Android中ListView、CheckBox状态混乱解决方式">
-<meta property="og:url" content="http://yoursite.com/2017/09/24/Android中ListView、CheckBox状态混乱解决方式/index.html">
+<meta property="og:title" content="关于View测量宽度高度的一些思考">
+<meta property="og:url" content="http://yoursite.com/2017/09/24/关于View测量宽度高度的一些思考/index.html">
 <meta property="og:site_name" content="duanJobs Home">
-<meta property="og:description" content="Android中ListView、CheckBox状态混乱解决方式">
+<meta property="og:description" content="在做一个平铺效果时，遇到了问题：LinearLayout包含GridView，当GridView的数据源变多时，LinearLayout平铺展开。但是对展开后的高度测量错误导致，展开过多，导致下方很大一片空白。 整个布局大致描述如下：RecycleView的item布局是LinearLayout包含一个GridView，这里的GridView是重写了onMeasure的。 在分析问题之前，先说说关">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-09-24T08:57:13.000Z">
+<meta property="og:image" content="http://oi5p36v0h.bkt.clouddn.com/%E6%B5%8B%E9%87%8F%E6%A8%A1%E5%BC%8F%E5%9B%BE">
+<meta property="og:updated_time" content="2017-09-24T12:41:01.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Android中ListView、CheckBox状态混乱解决方式">
-<meta name="twitter:description" content="Android中ListView、CheckBox状态混乱解决方式">
+<meta name="twitter:title" content="关于View测量宽度高度的一些思考">
+<meta name="twitter:description" content="在做一个平铺效果时，遇到了问题：LinearLayout包含GridView，当GridView的数据源变多时，LinearLayout平铺展开。但是对展开后的高度测量错误导致，展开过多，导致下方很大一片空白。 整个布局大致描述如下：RecycleView的item布局是LinearLayout包含一个GridView，这里的GridView是重写了onMeasure的。 在分析问题之前，先说说关">
+<meta name="twitter:image" content="http://oi5p36v0h.bkt.clouddn.com/%E6%B5%8B%E9%87%8F%E6%A8%A1%E5%BC%8F%E5%9B%BE">
 
 
 
@@ -110,13 +112,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/09/24/Android中ListView、CheckBox状态混乱解决方式/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/09/24/关于View测量宽度高度的一些思考/"/>
 
 
 
 
 
-  <title>Android中ListView、CheckBox状态混乱解决方式 | duanJobs Home</title>
+  <title>关于View测量宽度高度的一些思考 | duanJobs Home</title>
   
 
 
@@ -253,7 +255,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/24/Android中ListView、CheckBox状态混乱解决方式/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/24/关于View测量宽度高度的一些思考/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="duanJobs">
@@ -270,7 +272,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Android中ListView、CheckBox状态混乱解决方式</h1>
+          <h1 class="post-title" itemprop="name headline">关于View测量宽度高度的一些思考</h1>
         
 
         <div class="post-meta">
@@ -282,7 +284,7 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-24T15:11:28+08:00">
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-24T20:37:16+08:00">
                 2017-09-24
               </time>
             
@@ -328,10 +330,6 @@
           
 
           
-              <div class="post-description">
-                  Android中ListView、CheckBox状态混乱解决方式
-              </div>
-          
 
         </div>
       </header>
@@ -346,22 +344,30 @@
       
 
       
-        <h3 id="出现的问题"><a href="#出现的问题" class="headerlink" title="出现的问题"></a>出现的问题</h3><p>在开发过程中，发现ListView嵌套CheckBox记录选中状态时，如果滚动列表，则会出现选中状态的混乱。这个问题是很常见的问题了，ListView中如果有图片也会出现类似的情况。主要原因是：ListView的缓存机制：</p>
+        <p>在做一个平铺效果时，遇到了问题：LinearLayout包含GridView，当GridView的数据源变多时，LinearLayout平铺展开。但是对展开后的高度测量错误导致，展开过多，导致下方很大一片空白。</p>
+<p>整个布局大致描述如下：<br>RecycleView的item布局是LinearLayout包含一个GridView，这里的GridView是重写了onMeasure的。</p>
+<p>在分析问题之前，先说说关于Measure的事情，<br>一般得到某个view的高度或者宽度可以有以下几种</p>
 <ul>
-<li>ListView会缓存行item。ListView通过adapter的getView函数获得每行的item；</li>
-<li>滑动过程中，如果某行item已经滑出屏幕，若该item不在缓存内，则放进缓存，若存在，则更新缓存中的数据；</li>
-<li>获取滑入屏幕的行item之前会先判断缓存中是否有可用的item，如果有，则做为convertView参数传递给adapter的getView。</li>
-<li>所以说，每个item不同的显示只是改变这个对象的显示值而已，item占用的资源不变。</li>
+<li>View.MeasureSpec.makeMeasureSpec</li>
+<li>view.post</li>
+<li>ViewTreeObserver.addOnGlobalLayoutListener</li>
 </ul>
-<h3 id="解决方式"><a href="#解决方式" class="headerlink" title="解决方式"></a>解决方式</h3><ol>
-<li>不用convertView或者viewHolder。//个人建议不要这样做，数据量大的时候，开销太大了。</li>
-<li>用某数据结构记录选中状态。//本文</li>
-<li>如果是图片，可以使用setTag（Url），给其一个标识，然后判断加载的url和标识是否一致，此文不再赘述。</li>
+<p>等</p>
+<p>一般在LinearLayout中下面的测量方式可以胜任大部分测量高度宽度的任务</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">int intw= View.MeasureSpec.makeMeasureSpec(<span class="number">0</span>,View.MeasureSpec.UNSPECIFIED)<span class="comment">;</span></div><div class="line">int inth=View.MeasureSpec.makeMeasureSpec(<span class="number">0</span>,View.MeasureSpec.UNSPECIFIED)<span class="comment">;</span></div><div class="line">v.measure(intw, inth)<span class="comment">;</span></div><div class="line">int H = v.getMeasuredHeight()<span class="comment">;</span></div><div class="line">int W = v.getMeasuredWidth()<span class="comment">;</span></div></pre></td></tr></table></figure>
+<p>这种在测量高度或者宽度时，当组件中包括其他子组件时，所获取的实际值是这些组件所占的最小宽度和最小高度。如果给父组件设置了matchParent，但是没有子组件，或者子组件为高度或者宽度为0 那么父组件相应的也为0，如果子组件为gone，哪怕孙组件设定了宽和高的值，父组件相应的宽高也为0。因为子组件gone，压根不测了。上面的测量方式和 <code>view.post</code> 方式获得的高度是不同的，后者可以得到实际的宽高。<br>再来说说这种测量方式的几种模式</p>
+<ol>
+<li>UNSPECIFIED(未指定),父控件对子控件不加任何束缚，子元素可以得到任意想要的大小，这种MeasureSpec一般是由父控件自身的特性决定的。比如ScrollView，它的子View可以随意设置大小，无论多高，都能滚动显示，这个时候，size一般就没什么意义。</li>
+<li>EXACTLY(完全)，父控件为子View指定确切大小，希望子View完全按照自己给定尺寸来处理，这时的MeasureSpec一般是父控件根据自身的MeasureSpec跟子View的布局参数来确定的。一般这种情况下size&gt;0,有个确定值，或者<strong>父组件有固定，子组件match_parent</strong></li>
+<li>AT_MOST(至多)，父控件为子元素指定最大参考尺寸，希望子View的尺寸不要超过这个尺寸。这种模式也是父控件根据自身的MeasureSpec跟子View的布局参数来确定的，一般是子View的布局参数采用wrap_content的时候。</li>
 </ol>
-<h3 id="部分代码"><a href="#部分代码" class="headerlink" title="部分代码"></a>部分代码</h3><p>使用HashMap记录选中状态，<br><code>private HashMap&lt;Integer,Boolean&gt; checkRem = new HashMap&lt;Integer,Boolean&gt;();</code></p>
-<p>记得在Adapter里初始化<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">()</span></span>&#123;</div><div class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;mList.size();i++)&#123;</div><div class="line">        checkRem.put(i,<span class="literal">false</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>在getView里设置监听，更新记录状态（此处是为checkBox设置，如果item只有一个checkBox点击事件，可以在OnItemClickListener()中设置监听）。checkBox的初始化，即setChecked要放在监听的后面。</p>
-<figure class="highlight arduino"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">box.setOnCheckedChangeListener(<span class="keyword">new</span> CompoundButton.OnCheckedChangeListener() &#123;</div><div class="line">            @Override</div><div class="line">            <span class="keyword">public</span> <span class="keyword">void</span> onCheckedChanged(CompoundButton compoundButton, <span class="keyword">boolean</span> b) &#123;</div><div class="line">                <span class="built_in">if</span>(b)&#123;</div><div class="line">                    checkRem.<span class="built_in">put</span>(<span class="built_in">position</span>,true);</div><div class="line">                &#125;<span class="built_in">else</span>&#123;</div><div class="line">                    checkRem.<span class="built_in">put</span>(<span class="built_in">position</span>,false);</div><div class="line">                    &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line"><span class="comment">// 这句要写在监听后面</span></div><div class="line">box.setChecked(checkRem.<span class="built_in">get</span>(<span class="built_in">position</span>));</div></pre></td></tr></table></figure>
+<p>如何确定子View的测量模式呢？父类测量子类是调用子View的<code>measure(widthMeasureSpec，heightMeasureHeight)</code>，这个两个测量 <code>widthMeasureSpec</code> 规则是父类根据自己的宽度和子类的 LayoutParams 计算出来的。</p>
+<p>具体如下图（网图）：<br><img src="http://oi5p36v0h.bkt.clouddn.com/%E6%B5%8B%E9%87%8F%E6%A8%A1%E5%BC%8F%E5%9B%BE" alt="image"></p>
+<p>那么，回到一开始的问题中去正是由于重写了GridView的onMeasure</p>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"> <span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">onMeasure</span><span class="params">(<span class="keyword">int</span> widthMeasureSpec, <span class="keyword">int</span> heightMeasureSpec)</span> </span>&#123;</div><div class="line">     <span class="keyword">int</span> expandSpec = MeasureSpec.makeMeasureSpec(Integer.MAX_VALUE &gt;&gt; <span class="number">2</span>,</div><div class="line">             MeasureSpec.AT_MOST);</div><div class="line">     <span class="keyword">super</span>.onMeasure(widthMeasureSpec, expandSpec);</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
+<p>一开始出问题的测量方式参数都是UNSPECIFIED，一般没问题，但是这里不行，将参数替换</p>
+<figure class="highlight gauss"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">int intw = <span class="built_in">View</span>.MeasureSpec.makeMeasureSpec(linearLaoutname.getWidth(), <span class="built_in">View</span>.MeasureSpec.AT_MOST);<span class="comment">//（第一个参数也可以设定为屏幕宽度,这里是LinearLayout的宽度）</span></div><div class="line">int inth = <span class="built_in">View</span>.MeasureSpec.makeMeasureSpec(Integer.MAX_VALUE &gt;&gt; <span class="number">2</span>,</div><div class="line">        MeasureSpec.AT_MOST);</div></pre></td></tr></table></figure>
+<p>问题得到解决。其中需要注意的点，好多人以为如果只测量高度，宽度的参数是不是不重要。当然不是，都得正确，不然测不准。<br>其中还有个小意外就是 gridview不调用notifyDataSetChanged 也能刷新，为啥呢？因为平铺展开也执行了 requestLayout() 和notifyDataSetChanged 一样的。</p>
 
       
     </div>
@@ -381,9 +387,9 @@
           
             <a href="/tags/Android/" rel="tag"># Android</a>
           
-            <a href="/tags/ListView/" rel="tag"># ListView</a>
+            <a href="/tags/ViewGroup/" rel="tag"># ViewGroup</a>
           
-            <a href="/tags/CheckBox/" rel="tag"># CheckBox</a>
+            <a href="/tags/Measure/" rel="tag"># Measure</a>
           
         </div>
       
@@ -396,14 +402,18 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2017/09/24/带箭头的ArrowTextView实现方法之二/" rel="next" title="带箭头的ArrowTextView实现方法之二">
+                <i class="fa fa-chevron-left"></i> 带箭头的ArrowTextView实现方法之二
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/09/24/带箭头的ArrowTextView实现方法之一/" rel="prev" title="带箭头的ArrowTextView实现方法之一">
-                带箭头的ArrowTextView实现方法之一 <i class="fa fa-chevron-right"></i>
+              <a href="/2017/09/24/如何判断Android应用程序前后台切换/" rel="prev" title="如何判断Android应用程序前后台切换">
+                如何判断Android应用程序前后台切换 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -456,17 +466,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview sidebar-panel">
+      <section class="site-overview sidebar-panel sidebar-panel-active">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           
             <img class="site-author-image" itemprop="image"
@@ -545,22 +546,6 @@
 
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#出现的问题"><span class="nav-number">1.</span> <span class="nav-text">出现的问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决方式"><span class="nav-number">2.</span> <span class="nav-text">解决方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#部分代码"><span class="nav-number">3.</span> <span class="nav-text">部分代码</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
       
