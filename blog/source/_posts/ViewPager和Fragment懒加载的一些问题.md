@@ -2,13 +2,12 @@
 title: ViewPager和Fragment懒加载的一些问题
 date: 2017-09-24 21:28:56
 categories: Android
+description: 懒加载中的一些注意点
 keywords: ViewPager, Fragment, 懒加载, LazyLoad
 tags: [Android, ViewPager, Fragment, 懒加载]
 ---
 #### 懒加载问题
-项目中实现滑动页面切换大多用viewpager fragment的方式，为了优化，往往加载方式都是“懒加载”，怎么实现懒加载呢？都知道setUserVisibleHint 中采用如下标识，大体如
-下面代码示例：
-
+项目中实现滑动页面切换大多用viewpager fragment的方式，为了优化，往往加载方式都是“懒加载”，怎么实现懒加载呢？都知道setUserVisibleHint 中采用如下标识，大体如下代码示例：
 ```
 @Override
 public void setUserVisibleHint(boolean isVisibleToUser) {
