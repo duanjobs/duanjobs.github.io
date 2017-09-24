@@ -69,18 +69,18 @@
 
 
 
-<meta name="description" content="懒加载问题项目中实现滑动页面切换大多用viewpager fragment的方式，为了优化，往往加载方式都是“懒加载”，怎么实现懒加载呢？都知道setUserVisibleHint 中采用如下标识，大体如下面代码示例： 12345678910@Overridepublic void setUserVisibleHint(boolean isVisibleToUser) &amp;#123;    supe">
+<meta name="description" content="懒加载中的一些注意点">
 <meta name="keywords" content="ViewPager, Fragment, 懒加载, LazyLoad">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ViewPager和Fragment懒加载的一些问题">
 <meta property="og:url" content="http://yoursite.com/2017/09/24/ViewPager和Fragment懒加载的一些问题/index.html">
 <meta property="og:site_name" content="duanJobs Home">
-<meta property="og:description" content="懒加载问题项目中实现滑动页面切换大多用viewpager fragment的方式，为了优化，往往加载方式都是“懒加载”，怎么实现懒加载呢？都知道setUserVisibleHint 中采用如下标识，大体如下面代码示例： 12345678910@Overridepublic void setUserVisibleHint(boolean isVisibleToUser) &amp;#123;    supe">
+<meta property="og:description" content="懒加载中的一些注意点">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-09-24T13:29:50.000Z">
+<meta property="og:updated_time" content="2017-09-24T13:37:46.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ViewPager和Fragment懒加载的一些问题">
-<meta name="twitter:description" content="懒加载问题项目中实现滑动页面切换大多用viewpager fragment的方式，为了优化，往往加载方式都是“懒加载”，怎么实现懒加载呢？都知道setUserVisibleHint 中采用如下标识，大体如下面代码示例： 12345678910@Overridepublic void setUserVisibleHint(boolean isVisibleToUser) &amp;#123;    supe">
+<meta name="twitter:description" content="懒加载中的一些注意点">
 
 
 
@@ -328,6 +328,10 @@
           
 
           
+              <div class="post-description">
+                  懒加载中的一些注意点
+              </div>
+          
 
         </div>
       </header>
@@ -342,8 +346,7 @@
       
 
       
-        <h4 id="懒加载问题"><a href="#懒加载问题" class="headerlink" title="懒加载问题"></a>懒加载问题</h4><p>项目中实现滑动页面切换大多用viewpager fragment的方式，为了优化，往往加载方式都是“懒加载”，怎么实现懒加载呢？都知道setUserVisibleHint 中采用如下标识，大体如<br>下面代码示例：</p>
-<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">setUserVisibleHint</span><span class="params">(<span class="keyword">boolean</span> isVisibleToUser)</span> </span>&#123;</div><div class="line">    <span class="keyword">super</span>.setUserVisibleHint(isVisibleToUser);</div><div class="line">    <span class="keyword">if</span> (getUserVisibleHint()) &#123;</div><div class="line">        isVisible = <span class="keyword">true</span>;</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        isVisible = <span class="keyword">false</span>;</div><div class="line">    &#125;</div><div class="line">    onVisible();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+        <h4 id="懒加载问题"><a href="#懒加载问题" class="headerlink" title="懒加载问题"></a>懒加载问题</h4><p>项目中实现滑动页面切换大多用viewpager fragment的方式，为了优化，往往加载方式都是“懒加载”，怎么实现懒加载呢？都知道setUserVisibleHint 中采用如下标识，大体如下代码示例：<br><figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">setUserVisibleHint</span><span class="params">(<span class="keyword">boolean</span> isVisibleToUser)</span> </span>&#123;</div><div class="line">    <span class="keyword">super</span>.setUserVisibleHint(isVisibleToUser);</div><div class="line">    <span class="keyword">if</span> (getUserVisibleHint()) &#123;</div><div class="line">        isVisible = <span class="keyword">true</span>;</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        isVisible = <span class="keyword">false</span>;</div><div class="line">    &#125;</div><div class="line">    onVisible();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>在<code>onVisible()</code> 里加载数据就完了？错<br>都知道  当fragment被用户可见时，<code>setUserVisibleHint()</code>会调用且传入true值，当fragment不被用户可见时，<code>setUserVisibleHint()</code>则传入false值。<br>那<code>setUserVisibleHint()</code>何时会被调用呢？<br>答案是：啥时候都可以。和fragment的生命周期无关。</p>
 <p>具体问题具体分析：在 <code>viewpager</code> 的<code>FragmentPagerAdapter</code>中 ，这个函数在fragment生命周期前就调用多次了。<br>先来看<code>FragmentPagerAdapter</code>源码</p>
 <figure class="highlight axapta"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">@Override</div><div class="line"><span class="keyword">public</span> Object instantiateItem(ViewGroup <span class="keyword">container</span>, <span class="keyword">int</span> position) &#123;</div><div class="line">    <span class="keyword">if</span> (mCurTransaction == <span class="keyword">null</span>) &#123;</div><div class="line">        mCurTransaction = mFragmentManager.beginTransaction();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">final</span> <span class="keyword">long</span> itemId = getItemId(position);</div><div class="line"></div><div class="line">    <span class="comment">// Do we already have this fragment?</span></div><div class="line">    String name = makeFragmentName(<span class="keyword">container</span>.getId(), itemId);</div><div class="line">    Fragment fragment = mFragmentManager.findFragmentByTag(name);</div><div class="line">    <span class="keyword">if</span> (fragment != <span class="keyword">null</span>) &#123;</div><div class="line">        <span class="keyword">if</span> (DEBUG) Log.v(TAG, <span class="string">"Attaching item #"</span> + itemId + <span class="string">": f="</span> + fragment);</div><div class="line">        mCurTransaction.attach(fragment);</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        fragment = getItem(position);</div><div class="line">        <span class="keyword">if</span> (DEBUG) Log.v(TAG, <span class="string">"Adding item #"</span> + itemId + <span class="string">": f="</span> + fragment);</div><div class="line">        mCurTransaction.add(<span class="keyword">container</span>.getId(), fragment,</div><div class="line">                makeFragmentName(<span class="keyword">container</span>.getId(), itemId));</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> (fragment != mCurrentPrimaryItem) &#123;</div><div class="line">        fragment.setMenuVisibility(<span class="keyword">false</span>);</div><div class="line">        fragment.setUserVisibleHint(<span class="keyword">false</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> fragment;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
