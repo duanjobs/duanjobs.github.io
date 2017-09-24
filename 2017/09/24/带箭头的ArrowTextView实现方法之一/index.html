@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Android,自定义View,ArrowTextView," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="自定义View的需求在开发的时候，需要一个带箭头的TextView用来对某功能做简短介绍，当然可以让设计师切个图啦，但是自己搞一个岂不是美滋滋？为此，想用两种方式实现这个需求：  继承TextView，重写onDraw(); 继承RelativeLayout等类，形成组合控件。那这一篇就先写写比较简单的第一种思路吧。  实现分析这里不做自定义View的讲解，只讲实现思路继承TextVie的好处就是">
+<meta name="keywords" content="Android,自定义View,ArrowTextView">
+<meta property="og:type" content="article">
+<meta property="og:title" content="带箭头的ArrowTextView实现方法之一">
+<meta property="og:url" content="http://yoursite.com/2017/09/24/带箭头的ArrowTextView实现方法之一/index.html">
+<meta property="og:site_name" content="duanJobs Home">
+<meta property="og:description" content="自定义View的需求在开发的时候，需要一个带箭头的TextView用来对某功能做简短介绍，当然可以让设计师切个图啦，但是自己搞一个岂不是美滋滋？为此，想用两种方式实现这个需求：  继承TextView，重写onDraw(); 继承RelativeLayout等类，形成组合控件。那这一篇就先写写比较简单的第一种思路吧。  实现分析这里不做自定义View的讲解，只讲实现思路继承TextVie的好处就是">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://oi5p36v0h.bkt.clouddn.com/fenxibiaozuo.png">
+<meta property="og:image" content="http://oi5p36v0h.bkt.clouddn.com/layout-2016-12-14-114446.png">
+<meta property="og:image" content="http://oi5p36v0h.bkt.clouddn.com/QQ20161214-0@2x.png">
+<meta property="og:updated_time" content="2017-09-24T07:50:28.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="带箭头的ArrowTextView实现方法之一">
+<meta name="twitter:description" content="自定义View的需求在开发的时候，需要一个带箭头的TextView用来对某功能做简短介绍，当然可以让设计师切个图啦，但是自己搞一个岂不是美滋滋？为此，想用两种方式实现这个需求：  继承TextView，重写onDraw(); 继承RelativeLayout等类，形成组合控件。那这一篇就先写写比较简单的第一种思路吧。  实现分析这里不做自定义View的讲解，只讲实现思路继承TextVie的好处就是">
+<meta name="twitter:image" content="http://oi5p36v0h.bkt.clouddn.com/fenxibiaozuo.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/09/24/带箭头的ArrowTextView实现方法之一/"/>
+
+
+
+
+
+  <title>带箭头的ArrowTextView实现方法之一 | duanJobs Home</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">duanJobs Home</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">duanJobs的博客</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/24/带箭头的ArrowTextView实现方法之一/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="duanJobs">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="duanJobs Home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">带箭头的ArrowTextView实现方法之一</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-24T15:23:38+08:00">
+                2017-09-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="自定义View的需求"><a href="#自定义View的需求" class="headerlink" title="自定义View的需求"></a>自定义View的需求</h2><p>在开发的时候，需要一个带箭头的TextView用来对某功能做简短介绍，当然可以让设计师切个图啦，但是自己搞一个岂不是美滋滋？<br>为此，想用两种方式实现这个需求：</p>
+<ul>
+<li>继承TextView，重写onDraw();</li>
+<li>继承RelativeLayout等类，形成组合控件。<br>那这一篇就先写写比较简单的第一种思路吧。</li>
+</ul>
+<h3 id="实现分析"><a href="#实现分析" class="headerlink" title="实现分析"></a>实现分析</h3><p><strong>这里不做自定义View的讲解，只讲实现思路</strong><br>继承TextVie的好处就是能够利用TextView本身的文字功能，不需要过多的考虑如何处理文字；否则，如果继承View的话，光处理文字就比较复杂。</p>
+<h4 id="step1-增加自定义属性"><a href="#step1-增加自定义属性" class="headerlink" title="step1 增加自定义属性"></a>step1 增加自定义属性</h4><p>自定义View需要有自定义的属性，在ArrowTextView中，大概有以下几个方面需要定义：</p>
+<ol>
+<li>箭头相关：方向、高、宽</li>
+<li>整个View的背景色</li>
+<li>箭头相对边的位置（箭头居中或者靠前等）</li>
+<li>圆角矩形的角的Radius<br>先定义这么多，后期需要的话再扩展。</li>
+</ol>
+<p>那么，在attr中增加如下代码:<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">resources</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">declare-styleable</span> <span class="attr">name</span>=<span class="string">"ArrowTextView"</span>&gt;</span></div><div class="line">        <span class="comment">&lt;!-- Corner radius for ArrowTextView. --&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"arrowCornerRadius"</span> <span class="attr">format</span>=<span class="string">"dimension"</span>/&gt;</span></div><div class="line">        <span class="comment">&lt;!-- Background color for ArrowTextView. --&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"arrowBackgroundColor"</span> <span class="attr">format</span>=<span class="string">"color"</span>/&gt;</span></div><div class="line">        <span class="comment">&lt;!-- direction for arrow. --&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"arrowDirection"</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">enum</span> <span class="attr">name</span>=<span class="string">"left"</span> <span class="attr">value</span>=<span class="string">"1"</span>/&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">enum</span> <span class="attr">name</span>=<span class="string">"top"</span> <span class="attr">value</span>=<span class="string">"2"</span>/&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">enum</span> <span class="attr">name</span>=<span class="string">"right"</span> <span class="attr">value</span>=<span class="string">"3"</span>/&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">enum</span> <span class="attr">name</span>=<span class="string">"bottom"</span> <span class="attr">value</span>=<span class="string">"4"</span>/&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">attr</span>&gt;</span></div><div class="line">        <span class="comment">&lt;!-- position for arrow. --&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span> = <span class="string">"relativePosition"</span> <span class="attr">format</span> = <span class="string">"fraction"</span> /&gt;</span></div><div class="line">        <span class="comment">&lt;!-- arrow width height --&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"arrowWidth"</span> <span class="attr">format</span>=<span class="string">"dimension"</span> /&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"arrowHeight"</span> <span class="attr">format</span>=<span class="string">"dimension"</span> /&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"arrowTextSize"</span> <span class="attr">format</span>=<span class="string">"dimension"</span>/&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"arrowTextColor"</span> <span class="attr">format</span>=<span class="string">"color"</span>/&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">attr</span> <span class="attr">name</span>=<span class="string">"arrowText"</span> <span class="attr">format</span>=<span class="string">"string"</span>/&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">declare-styleable</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">resources</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<p>分别对应组合空间中TextView的字体大小、颜色和文本。</p>
+<h4 id="step2-继承RelativeLayout"><a href="#step2-继承RelativeLayout" class="headerlink" title="step2 继承RelativeLayout"></a>step2 继承RelativeLayout</h4><h4 id="step2-重写ArrowTextView"><a href="#step2-重写ArrowTextView" class="headerlink" title="step2 重写ArrowTextView"></a>step2 重写ArrowTextView</h4><p>首先，定义所需要的变量，分别对应自定义属性：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">protected</span> <span class="keyword">float</span> radius;</div><div class="line"><span class="keyword">protected</span> <span class="keyword">float</span> arrowWidth;</div><div class="line"><span class="keyword">protected</span> <span class="keyword">int</span> backroundColor;</div><div class="line"><span class="keyword">protected</span> <span class="keyword">float</span> arrowHeight;</div><div class="line"><span class="keyword">protected</span> ArrowDirection arrowDirection;</div><div class="line"><span class="keyword">protected</span> <span class="keyword">float</span> relativePosition;</div></pre></td></tr></table></figure></p>
+<p>然后，重写构造函数，在构造函数里取出定义属性的值,在代码里可以看到，构造函数都会走到第三个函数里进行变量的初始化。<br><figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">public ArrowTextView(<span class="built_in">Context</span> <span class="built_in">context</span>) &#123;</div><div class="line">        this(<span class="built_in">context</span>,null,<span class="number">0</span>)<span class="comment">;</span></div><div class="line">    &#125;</div><div class="line">    public ArrowTextView(<span class="built_in">Context</span> <span class="built_in">context</span>, AttributeSet attrs) &#123;</div><div class="line">        this(<span class="built_in">context</span>, attrs,<span class="number">0</span>)<span class="comment">;</span></div><div class="line">    &#125;</div><div class="line">    public ArrowTextView(<span class="built_in">Context</span> <span class="built_in">context</span>, AttributeSet attrs, int defStyleAttr) &#123;</div><div class="line">        super(<span class="built_in">context</span>, attrs, defStyleAttr)<span class="comment">;</span></div><div class="line">        mContext = <span class="built_in">context</span><span class="comment">;</span></div><div class="line">        TypedArray typedArray = <span class="built_in">context</span>.obtainStyledAttributes(attrs, R.styleable.ArrowTextView)<span class="comment">;</span></div><div class="line">        radius = typedArray.getDimension(R.styleable.ArrowTextView_arrowCornerRadius,<span class="number">0</span>)<span class="comment">;</span></div><div class="line">        arrowWidth=typedArray.getDimension(R.styleable.ArrowTextView_arrowWidth, <span class="number">0</span>)<span class="comment">;</span></div><div class="line">        arrowHeight=typedArray.getDimension(R.styleable.ArrowTextView_arrowHeight, <span class="number">0</span>)<span class="comment">;</span></div><div class="line">        <span class="keyword">backroundColor </span>= typedArray.getColor(R.styleable.ArrowTextView_arrowBackgroundColor, Color.GRAY)<span class="comment">;</span></div><div class="line">        float position=typedArray.getFraction(R.styleable.ArrowTextView_relativePosition,<span class="number">1</span>,<span class="number">1</span>,<span class="number">0</span>.<span class="number">3</span>f)<span class="comment">;</span></div><div class="line">        setRelativePosition(position)<span class="comment">;</span></div><div class="line">        int <span class="keyword">direction </span>= typedArray.getInt(R.styleable.ArrowTextView_arrowDirection,<span class="number">1</span>)<span class="comment">;</span></div><div class="line">        setArrowDirection(<span class="keyword">direction);</span></div><div class="line"><span class="keyword"> </span>   &#125;</div></pre></td></tr></table></figure></p>
+<p>其中，<code>setRelativePosition(position)</code>和<code>setArrowDirection(direction)</code>是将定义的属性值映射成所需的值，代码如下：<br><figure class="highlight arduino"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> <span class="keyword">void</span> setRelativePosition(<span class="keyword">float</span> <span class="built_in">position</span>)&#123;</div><div class="line">        <span class="built_in">if</span>(<span class="built_in">position</span>&lt;=<span class="number">0.05</span>f)&#123;</div><div class="line">            relativePosition=<span class="number">0.5</span>f;</div><div class="line">        &#125;<span class="built_in">else</span> <span class="built_in">if</span>(<span class="built_in">position</span>&gt;<span class="number">0.95</span>f)&#123;</div><div class="line">            relativePosition=<span class="number">0.95</span>f;</div><div class="line">        &#125;<span class="built_in">else</span>&#123;</div><div class="line">            relativePosition=<span class="built_in">position</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line"><span class="keyword">private</span> <span class="keyword">void</span> setArrowDirection(<span class="keyword">int</span> direction) &#123;</div><div class="line">        <span class="built_in">switch</span> (direction) &#123;</div><div class="line">            <span class="built_in">case</span> <span class="number">1</span>: &#123;</div><div class="line">                arrowDirection = ArrowDirection.LEFT;</div><div class="line">            &#125;</div><div class="line">            <span class="built_in">break</span>;</div><div class="line">            <span class="built_in">case</span> <span class="number">2</span>: &#123;</div><div class="line">                arrowDirection = ArrowDirection.TOP;</div><div class="line">            &#125;</div><div class="line">            <span class="built_in">break</span>;</div><div class="line">            <span class="built_in">case</span> <span class="number">3</span>: &#123;</div><div class="line">                arrowDirection = ArrowDirection.RIGHT;</div><div class="line">            &#125;</div><div class="line">            <span class="built_in">break</span>;</div><div class="line">            <span class="built_in">case</span> <span class="number">4</span>: &#123;</div><div class="line">                arrowDirection = ArrowDirection.BOTTOM;</div><div class="line">            &#125;</div><div class="line">            <span class="built_in">break</span>;</div><div class="line">            <span class="built_in">default</span>:</div><div class="line">                arrowDirection= ArrowDirection.LEFT;</div><div class="line">        &#125;</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>在<code>setRelativePosition(float position)</code>方法中，对相对位置作处理，避免不合理的情况出现，默认相对位置最小为5%，最大为95%，其他情况，可以任意取值。<br>在<code>setArrowDirection(int direction)</code>方法中，将xml中定义的属性映射成arrowDirection（ENUM），默认方向为LEFT。<br><figure class="highlight crystal"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">public <span class="class"><span class="keyword">enum</span> <span class="title">ArrowDirection</span> &#123;</span></div><div class="line">       LEFT, TOP, RIGHT, BOTTOM</div><div class="line">   &#125;</div></pre></td></tr></table></figure></p>
+<p>至此，准备工作完毕，开始onDraw方法的重写，在这里需要画出一个圆角矩形和一个箭头。具体在什么位置画还需要分析。<br><strong>假设箭头为LEFT，那么，圆角矩形的左边起始X坐标不应为0，应为箭头高度：ArrowHeight的值。其他三个边不变，上侧边为0，右侧边为控件的宽度值，底侧边应为控件的高度值。</strong><br><strong>假设箭头为TOP，那么除了上侧边的起始位置为箭头高度：ArrowHeight的值，其他三个边不变。</strong><br><strong>假设箭头为Right，那么右侧边的位置为控件的宽度值 - arrowHeight，其他三个不变。</strong><br><strong>假设箭头为Bottom，那么底侧边的起始位置为控件的高度值-arrowHeight，其他三个不变。</strong><br>以左侧箭头为例：<br><code>canvas.drawRoundRect(new RectF(arrowHeight, 0, width, height), radius, radius, paint);</code><br>画完了圆角矩形，开始把箭头画上去，以左侧箭头为例，<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="type">float</span> yMiddle = height * relativePosition;</div><div class="line"><span class="comment">//上面一行通过自定义属性relativePosition取三角形顶点的y坐标值</span></div><div class="line"><span class="type">float</span> yTop = yMiddle - (arrowWidth / <span class="number">2</span>);</div><div class="line"><span class="type">float</span> yBottom = yMiddle + (arrowWidth / <span class="number">2</span>);</div><div class="line"><span class="comment">//上面两行是取底边两个顶点的y坐标值。</span></div><div class="line">path.moveTo(<span class="number">0</span>, yMiddle);</div><div class="line">path.lineTo(arrowHeight, yTop);</div><div class="line">path.lineTo(arrowHeight, yBottom);</div><div class="line">path.lineTo(<span class="number">0</span>, yMiddle);</div><div class="line"><span class="comment">//上面四行是画出这个三角箭头，左侧箭头的起始坐标为（0, yMiddle），两个底边顶点的标为分别为(arrowHeight, yTop)、(arrowHeight, yBottom);</span></div></pre></td></tr></table></figure></p>
+<p>分析图如图所示：<br><img src="http://oi5p36v0h.bkt.clouddn.com/fenxibiaozuo.png" alt="坐标分析图"></p>
+<p>这样，ArrowTextView大体就完成了，但运行时发现，当有文字的时候会覆盖住箭头啊。看图：<br><img src="http://oi5p36v0h.bkt.clouddn.com/layout-2016-12-14-114446.png" alt="此处输入图片的描述"></p>
+<p>原因在于哪呢？主要是由于TextView的大小是包含这个小箭头的，所以在没有设置padding的情况下，文字当然从箭头开始啊。那能不能把padding修改下呢，这个得追根溯源，看看TextView的代码，于是我们发现了<code>getCompoundPaddingLeft()</code>这个计算左侧padding的函数。<br><figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment">     * Returns the left padding of the view, plus space for the left</span></div><div class="line"><span class="comment">     * Drawable if any.</span></div><div class="line"><span class="comment">     */</span></div><div class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">int</span> <span class="title">getCompoundPaddingLeft</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">final</span> Drawables dr = mDrawables;</div><div class="line">        <span class="keyword">if</span> (dr == <span class="keyword">null</span> || dr.mShowing[Drawables.LEFT] == <span class="keyword">null</span>) &#123;</div><div class="line">            <span class="keyword">return</span> mPaddingLeft;</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="keyword">return</span> mPaddingLeft + dr.mDrawablePadding + dr.mDrawableSizeLeft;</div><div class="line">        &#125;</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>找到根源啦，那就重写下计算padding的四个函数呗，思路就是根据箭头的方向，设置对应的padding为真实padding+arrowHeight的值，这样就可以把文字挤出小箭头的区域啦，还是以左侧为例。<br><figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">int</span> <span class="title">getCompoundPaddingLeft</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> arrowDirection == ArrowDirection.LEFT ? <span class="keyword">super</span>.getCompoundPaddingLeft() +</div><div class="line">                (<span class="keyword">int</span>) arrowHeight : <span class="keyword">super</span>.getCompoundPaddingLeft();</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>这样，基本就完成了ArrowTextView，其中遇到的小坑就是，在OnDraw（）函数中，我们会调用父类的<code>super.onDraw(canvas);</code>这个顺序是有讲究的，如果先调用这个方法，则先绘制TextView，再绘制自己的逻辑；如果后调用，则先绘制自己的逻辑，在绘制原生TextView。在这里需要先绘制自己的图层，最后调用这个方法，否则会把TextView中的文字覆盖掉。效果图：<br><img src="http://oi5p36v0h.bkt.clouddn.com/QQ20161214-0@2x.png" alt="此处输入图片的描述"><br>接下来就是用第二种方式实现，下一篇吧。<br>代码地址：<a href="https://github.com/duanjobs/ArrowTextView" target="_blank" rel="external">https://github.com/duanjobs/ArrowTextView</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag"># Android</a>
+          
+            <a href="/tags/自定义View/" rel="tag"># 自定义View</a>
+          
+            <a href="/tags/ArrowTextView/" rel="tag"># ArrowTextView</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/09/24/Android中ListView、CheckBox状态混乱解决方式/" rel="next" title="Android中ListView、CheckBox状态混乱解决方式">
+                <i class="fa fa-chevron-left"></i> Android中ListView、CheckBox状态混乱解决方式
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/09/24/带箭头的ArrowTextView实现方法之二/" rel="prev" title="带箭头的ArrowTextView实现方法之二">
+                带箭头的ArrowTextView实现方法之二 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          
+            <img class="site-author-image" itemprop="image"
+              src="/images/avatar.jpeg"
+              alt="duanJobs" />
+          
+            <p class="site-author-name" itemprop="name">duanJobs</p>
+            <p class="site-description motion-element" itemprop="description">只要在走就是对的</p>
+        </div>
+
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/duanjobs" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>GitHub</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:duanjobs@gmail.com" target="_blank" title="E-Mail">
+                  
+                    <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#自定义View的需求"><span class="nav-number">1.</span> <span class="nav-text">自定义View的需求</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#实现分析"><span class="nav-number">1.1.</span> <span class="nav-text">实现分析</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#step1-增加自定义属性"><span class="nav-number">1.1.1.</span> <span class="nav-text">step1 增加自定义属性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#step2-继承RelativeLayout"><span class="nav-number">1.1.2.</span> <span class="nav-text">step2 继承RelativeLayout</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#step2-重写ArrowTextView"><span class="nav-number">1.1.3.</span> <span class="nav-text">step2 重写ArrowTextView</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">duanJobs</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.2</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.2"></script>
+
+
+
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
