@@ -2,6 +2,8 @@
 title: Android中ListView、CheckBox状态混乱解决方式
 date: 2017-09-24 15:11:28
 categories: Android
+keywords: ListView, CheckBox, 混乱
+description: Android中ListView、CheckBox状态混乱解决方式
 tags: [Android, ListView, CheckBox]
 ---
 ### 出现的问题

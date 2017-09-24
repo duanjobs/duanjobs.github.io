@@ -2,6 +2,7 @@
 title: 带箭头的ArrowTextView实现方法之一
 date: 2017-09-24 15:23:38
 categories: Android
+keywords: 箭头, ArrowTextView, 自定义
 tags: [Android, 自定义View, ArrowTextView]
 ---
 ## 自定义View的需求
