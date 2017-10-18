@@ -53,7 +53,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="ListView, CheckBox, 混乱" />
+  <meta name="keywords" content="RecyclerView, 复用, GridView" />
 
 
 
@@ -69,18 +69,18 @@
 
 
 
-<meta name="description" content="Android中ListView、CheckBox状态混乱解决方式">
-<meta name="keywords" content="ListView, CheckBox, 混乱">
+<meta name="description" content="RecyclerView嵌套GridView的坑">
+<meta name="keywords" content="RecyclerView, 复用, GridView">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Android中ListView、CheckBox状态混乱解决方式">
-<meta property="og:url" content="https://duanjobs.github.io/2017/09/24/Android中ListView、CheckBox状态混乱解决方式/index.html">
+<meta property="og:title" content="RecyclerView嵌套GridView的坑">
+<meta property="og:url" content="https://duanjobs.github.io/2017/10/17/RecyclerView嵌套GridView的坑/index.html">
 <meta property="og:site_name" content="duanJobs Home">
-<meta property="og:description" content="Android中ListView、CheckBox状态混乱解决方式">
+<meta property="og:description" content="RecyclerView嵌套GridView的坑">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-10-16T12:33:49.000Z">
+<meta property="og:updated_time" content="2017-10-18T06:13:09.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Android中ListView、CheckBox状态混乱解决方式">
-<meta name="twitter:description" content="Android中ListView、CheckBox状态混乱解决方式">
+<meta name="twitter:title" content="RecyclerView嵌套GridView的坑">
+<meta name="twitter:description" content="RecyclerView嵌套GridView的坑">
 
 
 
@@ -110,13 +110,13 @@
 
 
 
-  <link rel="canonical" href="https://duanjobs.github.io/2017/09/24/Android中ListView、CheckBox状态混乱解决方式/"/>
+  <link rel="canonical" href="https://duanjobs.github.io/2017/10/17/RecyclerView嵌套GridView的坑/"/>
 
 
 
 
 
-  <title>Android中ListView、CheckBox状态混乱解决方式 | duanJobs Home</title>
+  <title>RecyclerView嵌套GridView的坑 | duanJobs Home</title>
   
 
 
@@ -253,7 +253,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://duanjobs.github.io/2017/09/24/Android中ListView、CheckBox状态混乱解决方式/">
+    <link itemprop="mainEntityOfPage" href="https://duanjobs.github.io/2017/10/17/RecyclerView嵌套GridView的坑/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="duanJobs">
@@ -270,7 +270,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Android中ListView、CheckBox状态混乱解决方式</h1>
+          <h1 class="post-title" itemprop="name headline">RecyclerView嵌套GridView的坑</h1>
         
 
         <div class="post-meta">
@@ -282,8 +282,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-24T15:11:28+08:00">
-                2017-09-24
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-17T11:15:14+08:00">
+                2017-10-17
               </time>
             
 
@@ -329,7 +329,7 @@
 
           
               <div class="post-description">
-                  Android中ListView、CheckBox状态混乱解决方式
+                  RecyclerView嵌套GridView的坑
               </div>
           
 
@@ -346,22 +346,40 @@
       
 
       
-        <h3 id="出现的问题"><a href="#出现的问题" class="headerlink" title="出现的问题"></a>出现的问题</h3><p>在开发过程中，发现ListView嵌套CheckBox记录选中状态时，如果滚动列表，则会出现选中状态的混乱。这个问题是很常见的问题了，ListView中如果有图片也会出现类似的情况。主要原因是：ListView的缓存机制：</p>
+        <h3 id="遇到的问题"><a href="#遇到的问题" class="headerlink" title="遇到的问题"></a>遇到的问题</h3><p>在写一个功能时，不得已采用方案：<code>RecyclerView</code>嵌套<code>GridView</code>，于是乎，坑来了。</p>
+<p>先来看看最原始版本的<code>ViewHolder</code>的代码:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ViewHolder</span> <span class="keyword">extends</span> <span class="title">RecyclerView</span>.<span class="title">ViewHolder</span> </span>&#123;</div><div class="line"></div><div class="line">        <span class="keyword">public</span> MeasureHeightGridView gridView;</div><div class="line">        <span class="keyword">public</span> LinearLayout linMore;</div><div class="line">        <span class="keyword">public</span> LinearLayout linContainer;</div><div class="line">        <span class="keyword">public</span> TextView tvSubclassName;</div><div class="line">        <span class="keyword">public</span> TextView tvSubclassIntro;</div><div class="line">        <span class="keyword">public</span> RelativeLayout relBottom;</div><div class="line"></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="title">ViewHolder</span><span class="params">(View itemView)</span> </span>&#123;</div><div class="line">            <span class="keyword">super</span>(itemView);</div><div class="line">            gridView = (MeasureHeightGridView) itemView.findViewById(R.id.gv_inside);</div><div class="line">            linMore = (LinearLayout) itemView.findViewById(R.id.lin_more);</div><div class="line">            linContainer = (LinearLayout) itemView.findViewById(R.id.lin_container);</div><div class="line">            tvSubclassName = (TextView) itemView.findViewById(R.id.tv_subclass_name);</div><div class="line">            tvSubclassIntro = (TextView) itemView.findViewById(R.id.tv_subclass_intro);</div><div class="line">            relBottom = (RelativeLayout) itemView.findViewById(R.id.rel_bottom);</div><div class="line">        &#125;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p>然后在 <code>onBindViewHolder</code>里给<code>girdView</code> <code>setAdapter</code>和<code>setOnItemClickListener()</code></p>
+<p><strong>好了，到这问题来了：</strong></p>
 <ul>
-<li>ListView会缓存行item。ListView通过adapter的getView函数获得每行的item；</li>
-<li>滑动过程中，如果某行item已经滑出屏幕，若该item不在缓存内，则放进缓存，若存在，则更新缓存中的数据；</li>
-<li>获取滑入屏幕的行item之前会先判断缓存中是否有可用的item，如果有，则做为convertView参数传递给adapter的getView。</li>
-<li>所以说，每个item不同的显示只是改变这个对象的显示值而已，item占用的资源不变。</li>
-</ul>
-<h3 id="解决方式"><a href="#解决方式" class="headerlink" title="解决方式"></a>解决方式</h3><ol>
-<li>不用convertView或者viewHolder。//个人建议不要这样做，数据量大的时候，开销太大了。</li>
-<li>用某数据结构记录选中状态。//本文</li>
-<li>如果是图片，可以使用setTag（Url），给其一个标识，然后判断加载的url和标识是否一致，此文不再赘述。</li>
+<li><ol>
+<li><strong><code>girdView</code>点击事件丢失，而且只在滑出屏幕大概两个item的时候，再滑回来出现。</strong></li>
 </ol>
-<h3 id="部分代码"><a href="#部分代码" class="headerlink" title="部分代码"></a>部分代码</h3><p>使用HashMap记录选中状态，<br><code>private HashMap&lt;Integer,Boolean&gt; checkRem = new HashMap&lt;Integer,Boolean&gt;();</code></p>
-<p>记得在Adapter里初始化<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">()</span></span>&#123;</div><div class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;mList.size();i++)&#123;</div><div class="line">        checkRem.put(i,<span class="literal">false</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>在getView里设置监听，更新记录状态（此处是为checkBox设置，如果item只有一个checkBox点击事件，可以在OnItemClickListener()中设置监听）。checkBox的初始化，即setChecked要放在监听的后面。</p>
-<figure class="highlight arduino"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">box.setOnCheckedChangeListener(<span class="keyword">new</span> CompoundButton.OnCheckedChangeListener() &#123;</div><div class="line">            @Override</div><div class="line">            <span class="keyword">public</span> <span class="keyword">void</span> onCheckedChanged(CompoundButton compoundButton, <span class="keyword">boolean</span> b) &#123;</div><div class="line">                <span class="built_in">if</span>(b)&#123;</div><div class="line">                    checkRem.<span class="built_in">put</span>(<span class="built_in">position</span>,true);</div><div class="line">                &#125;<span class="built_in">else</span>&#123;</div><div class="line">                    checkRem.<span class="built_in">put</span>(<span class="built_in">position</span>,false);</div><div class="line">                    &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line"><span class="comment">// 这句要写在监听后面</span></div><div class="line">box.setChecked(checkRem.<span class="built_in">get</span>(<span class="built_in">position</span>));</div></pre></td></tr></table></figure>
+</li>
+<li><ol>
+<li><strong>由于<code>RecyclerView</code>的item会有“展示更多”button的伸展操作，在伸展完后，复用时，item高度错误，出现大片空白。</strong></li>
+</ol>
+</li>
+</ul>
+<h3 id="如何解决"><a href="#如何解决" class="headerlink" title="如何解决"></a>如何解决</h3><p>看这种情况，明显是复用出了问题啊。</p>
+<p>对于问题2. 临时解决方案：不复用这种类型的item（仅仅是临时，因为问题1的解决方案可以解决问题2）</p>
+<p><strong>如何不复用<code>RecyclerView</code>的某种<code>ViewHolder</code>？一句代码如下</strong></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">RecyclerView</span><span class="selector-class">.getRecycledViewPool</span>()<span class="selector-class">.setMaxRecycledViews</span>(<span class="selector-tag">VIEWHOLDERTYPE</span>, 0);</div></pre></td></tr></table></figure>
+<p>对于问题1. 嗯，思考良久，决定把<code>Adapter</code>相关操作放到ViewHolder里，并自定义click事件</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">public class ViewHolder <span class="keyword">extends </span>RecyclerView.ViewHolder &#123;</div><div class="line"></div><div class="line">       public MeasureHeightGridView gridView<span class="comment">;</span></div><div class="line">       public LinearLayout linMore<span class="comment">;</span></div><div class="line">       public LinearLayout linContainer<span class="comment">;</span></div><div class="line">       public TextView tvSubclassName<span class="comment">;</span></div><div class="line">       public TextView tvSubclassIntro<span class="comment">;</span></div><div class="line">       public RelativeLayout relBottom<span class="comment">;</span></div><div class="line"></div><div class="line">       public CourseSubAdapter courseSubAdapter<span class="comment">;</span></div><div class="line"></div><div class="line"></div><div class="line">       public ViewHolder(View itemView) &#123;</div><div class="line">           super(itemView)<span class="comment">;</span></div><div class="line">           gridView = (MeasureHeightGridView) itemView.findViewById(R.id.gv_inside)<span class="comment">;</span></div><div class="line">           linMore = (LinearLayout) itemView.findViewById(R.id.lin_more)<span class="comment">;</span></div><div class="line">           linContainer = (LinearLayout) itemView.findViewById(R.id.lin_container)<span class="comment">;</span></div><div class="line">           tvSubclassName = (TextView) itemView.findViewById(R.id.tv_subclass_name)<span class="comment">;</span></div><div class="line">           tvSubclassIntro = (TextView) itemView.findViewById(R.id.tv_subclass_intro)<span class="comment">;</span></div><div class="line">           relBottom = (RelativeLayout) itemView.findViewById(R.id.rel_bottom)<span class="comment">;</span></div><div class="line">           courseSubAdapter = new CourseSubAdapter(<span class="built_in">context</span>)<span class="comment">;</span></div><div class="line">           gridView.setAdapter(courseSubAdapter)<span class="comment">;</span></div><div class="line">       &#125;</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
+<p>对 <code>CourseSubAdapter</code> 的 <code>getView()</code>里给 <code>convertView</code>设置监听。问题可以解决。</p>
+<p>到现在，问题2也可以解决。其实就是复用出了问题。</p>
+<p>然后又出现了问题3</p>
+<ul>
+<li><ol>
+<li>发现 item 滑动后又混乱了</li>
+</ol>
+</li>
+</ul>
+<p>断点调试发现，<code>gridView</code>的<code>Adapter</code>也<code>Notify</code>了，数据都已更新，但是<code>gridView</code> UI并没有更新。只好<code>gridView.requesetLayout()</code> 解决。</p>
+<p><strong>在<code>onViewRecycled</code>里清空<code>gridView</code>的<code>adapter</code>数据，并<code>requesetLayout()</code>可以，如果这样的话，在<code>onBindViewHolder</code>里可以直接notify；</strong></p>
+<p><strong>也可以每次在<code>onBindViewHolder</code> <code>setData</code>后直接<code>requesetLayout()</code></strong></p>
+<p>RecyclerView复用机制决定下一篇记录一下~。</p>
 
       
     </div>
@@ -381,9 +399,9 @@
           
             <a href="/tags/Android/" rel="tag"># Android</a>
           
-            <a href="/tags/ListView/" rel="tag"># ListView</a>
+            <a href="/tags/RecyclerView/" rel="tag"># RecyclerView</a>
           
-            <a href="/tags/CheckBox/" rel="tag"># CheckBox</a>
+            <a href="/tags/嵌套GridView/" rel="tag"># 嵌套GridView</a>
           
         </div>
       
@@ -396,14 +414,18 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2017/10/10/支持CoordinatorLayout的SupportNestedFrameLayout/" rel="next" title="支持CoordinatorLayout的SupportNestedFrameLayout">
+                <i class="fa fa-chevron-left"></i> 支持CoordinatorLayout的SupportNestedFrameLayout
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/09/24/带箭头的ArrowTextView实现方法之一/" rel="prev" title="带箭头的ArrowTextView实现方法之一">
-                带箭头的ArrowTextView实现方法之一 <i class="fa fa-chevron-right"></i>
+              <a href="/2017/10/18/RecyclerView的ViewHolder复用机制总结/" rel="prev" title="RecyclerView的ViewHolder复用机制总结">
+                RecyclerView的ViewHolder复用机制总结 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -555,7 +577,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#出现的问题"><span class="nav-number">1.</span> <span class="nav-text">出现的问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决方式"><span class="nav-number">2.</span> <span class="nav-text">解决方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#部分代码"><span class="nav-number">3.</span> <span class="nav-text">部分代码</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#遇到的问题"><span class="nav-number">1.</span> <span class="nav-text">遇到的问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何解决"><span class="nav-number">2.</span> <span class="nav-text">如何解决</span></a></li></ol></div>
             
 
           </div>

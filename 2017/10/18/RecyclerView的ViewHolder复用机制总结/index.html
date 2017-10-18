@@ -53,7 +53,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="ListView, CheckBox, 混乱" />
+  <meta name="keywords" content="RecyclerView, 复用机制, ViewHolder" />
 
 
 
@@ -69,18 +69,18 @@
 
 
 
-<meta name="description" content="Android中ListView、CheckBox状态混乱解决方式">
-<meta name="keywords" content="ListView, CheckBox, 混乱">
+<meta name="description" content="RecyclerView的ViewHolder复用机制总结">
+<meta name="keywords" content="RecyclerView, 复用机制, ViewHolder">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Android中ListView、CheckBox状态混乱解决方式">
-<meta property="og:url" content="https://duanjobs.github.io/2017/09/24/Android中ListView、CheckBox状态混乱解决方式/index.html">
+<meta property="og:title" content="RecyclerView的ViewHolder复用机制总结">
+<meta property="og:url" content="https://duanjobs.github.io/2017/10/18/RecyclerView的ViewHolder复用机制总结/index.html">
 <meta property="og:site_name" content="duanJobs Home">
-<meta property="og:description" content="Android中ListView、CheckBox状态混乱解决方式">
+<meta property="og:description" content="RecyclerView的ViewHolder复用机制总结">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-10-16T12:33:49.000Z">
+<meta property="og:updated_time" content="2017-10-18T07:06:00.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Android中ListView、CheckBox状态混乱解决方式">
-<meta name="twitter:description" content="Android中ListView、CheckBox状态混乱解决方式">
+<meta name="twitter:title" content="RecyclerView的ViewHolder复用机制总结">
+<meta name="twitter:description" content="RecyclerView的ViewHolder复用机制总结">
 
 
 
@@ -110,13 +110,13 @@
 
 
 
-  <link rel="canonical" href="https://duanjobs.github.io/2017/09/24/Android中ListView、CheckBox状态混乱解决方式/"/>
+  <link rel="canonical" href="https://duanjobs.github.io/2017/10/18/RecyclerView的ViewHolder复用机制总结/"/>
 
 
 
 
 
-  <title>Android中ListView、CheckBox状态混乱解决方式 | duanJobs Home</title>
+  <title>RecyclerView的ViewHolder复用机制总结 | duanJobs Home</title>
   
 
 
@@ -253,7 +253,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://duanjobs.github.io/2017/09/24/Android中ListView、CheckBox状态混乱解决方式/">
+    <link itemprop="mainEntityOfPage" href="https://duanjobs.github.io/2017/10/18/RecyclerView的ViewHolder复用机制总结/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="duanJobs">
@@ -270,7 +270,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Android中ListView、CheckBox状态混乱解决方式</h1>
+          <h1 class="post-title" itemprop="name headline">RecyclerView的ViewHolder复用机制总结</h1>
         
 
         <div class="post-meta">
@@ -282,8 +282,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-24T15:11:28+08:00">
-                2017-09-24
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-18T14:14:14+08:00">
+                2017-10-18
               </time>
             
 
@@ -329,7 +329,7 @@
 
           
               <div class="post-description">
-                  Android中ListView、CheckBox状态混乱解决方式
+                  RecyclerView的ViewHolder复用机制总结
               </div>
           
 
@@ -346,22 +346,81 @@
       
 
       
-        <h3 id="出现的问题"><a href="#出现的问题" class="headerlink" title="出现的问题"></a>出现的问题</h3><p>在开发过程中，发现ListView嵌套CheckBox记录选中状态时，如果滚动列表，则会出现选中状态的混乱。这个问题是很常见的问题了，ListView中如果有图片也会出现类似的情况。主要原因是：ListView的缓存机制：</p>
+        <h3 id="前文"><a href="#前文" class="headerlink" title="前文"></a>前文</h3><p>在上一篇出现的问题总结起来就是：<strong>复用问题</strong>，其实布局没那么嵌套复杂，也不会出现，主要是嵌套的<code>GridView</code>导致这么多问题。如果是单纯的ImageView什么的，点击事件或者显示混乱什么的都很好解决。</p>
+<h3 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h3><p>所以，写个总结来总结下<code>RecyclerView</code>的<code>ViewHolder</code>复用机制吧。先来个表格，如下：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left"></th>
+<th style="text-align:left">回调onCreateViewHolder</th>
+<th style="text-align:left">回调onBindViewHolder</th>
+<th style="text-align:left">生命周期</th>
+<th style="text-align:left">备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">mAttachedScrap</td>
+<td style="text-align:left">否</td>
+<td style="text-align:left">否</td>
+<td style="text-align:left">onLayout函数周期内</td>
+<td style="text-align:left">屏幕内ItemView重用，具体指执行remove的ItemView(匹配postion)</td>
+</tr>
+<tr>
+<td style="text-align:left">mCachedViews</td>
+<td style="text-align:left">否</td>
+<td style="text-align:left">否</td>
+<td style="text-align:left">与mAdapter一致，否则存入mRecyclePool</td>
+<td style="text-align:left">默认缓存屏幕外2个(匹配postion)</td>
+</tr>
+<tr>
+<td style="text-align:left">mViewCacheExtension</td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left">不直接使用，由用户实现</td>
+</tr>
+<tr>
+<td style="text-align:left">mRecyclerPool</td>
+<td style="text-align:left">否</td>
+<td style="text-align:left">是</td>
+<td style="text-align:left">与自身生命周期一致，不被引用时释放</td>
+<td style="text-align:left">默认缓存5个，可以RecyclerView之间共享</td>
+</tr>
+</tbody>
+</table>
+<p>对应表格的简略版代码</p>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">final</span> ArrayList&lt;ViewHolder&gt; mAttachedScrap = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line">        ArrayList&lt;ViewHolder&gt; mChangedScrap = <span class="keyword">null</span>;</div><div class="line"></div><div class="line"><span class="keyword">final</span> ArrayList&lt;ViewHolder&gt; mCachedViews = <span class="keyword">new</span> ArrayList&lt;ViewHolder&gt;();</div><div class="line"><span class="keyword">private</span> <span class="keyword">int</span> mRequestedCacheMax = DEFAULT_CACHE_SIZE;</div><div class="line"><span class="keyword">int</span> mViewCacheMax = DEFAULT_CACHE_SIZE;</div><div class="line"></div><div class="line">RecycledViewPool mRecyclerPool;</div><div class="line"></div><div class="line"><span class="keyword">private</span> ViewCacheExtension mViewCacheExtension;</div></pre></td></tr></table></figure>
+<p>由表中可以看到<code>RecyclerView</code>其实是四级缓存：</p>
 <ul>
-<li>ListView会缓存行item。ListView通过adapter的getView函数获得每行的item；</li>
-<li>滑动过程中，如果某行item已经滑出屏幕，若该item不在缓存内，则放进缓存，若存在，则更新缓存中的数据；</li>
-<li>获取滑入屏幕的行item之前会先判断缓存中是否有可用的item，如果有，则做为convertView参数传递给adapter的getView。</li>
-<li>所以说，每个item不同的显示只是改变这个对象的显示值而已，item占用的资源不变。</li>
-</ul>
-<h3 id="解决方式"><a href="#解决方式" class="headerlink" title="解决方式"></a>解决方式</h3><ol>
-<li>不用convertView或者viewHolder。//个人建议不要这样做，数据量大的时候，开销太大了。</li>
-<li>用某数据结构记录选中状态。//本文</li>
-<li>如果是图片，可以使用setTag（Url），给其一个标识，然后判断加载的url和标识是否一致，此文不再赘述。</li>
+<li><ol>
+<li><code>mAttachedScrap</code>用于复用屏幕内的<code>itemView</code>，源码中具体存储的其实是正在执行<code>remove</code>操作的<code>ItemView</code>。（一级缓存）</li>
 </ol>
-<h3 id="部分代码"><a href="#部分代码" class="headerlink" title="部分代码"></a>部分代码</h3><p>使用HashMap记录选中状态，<br><code>private HashMap&lt;Integer,Boolean&gt; checkRem = new HashMap&lt;Integer,Boolean&gt;();</code></p>
-<p>记得在Adapter里初始化<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">()</span></span>&#123;</div><div class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;mList.size();i++)&#123;</div><div class="line">        checkRem.put(i,<span class="literal">false</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>在getView里设置监听，更新记录状态（此处是为checkBox设置，如果item只有一个checkBox点击事件，可以在OnItemClickListener()中设置监听）。checkBox的初始化，即setChecked要放在监听的后面。</p>
-<figure class="highlight arduino"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">box.setOnCheckedChangeListener(<span class="keyword">new</span> CompoundButton.OnCheckedChangeListener() &#123;</div><div class="line">            @Override</div><div class="line">            <span class="keyword">public</span> <span class="keyword">void</span> onCheckedChanged(CompoundButton compoundButton, <span class="keyword">boolean</span> b) &#123;</div><div class="line">                <span class="built_in">if</span>(b)&#123;</div><div class="line">                    checkRem.<span class="built_in">put</span>(<span class="built_in">position</span>,true);</div><div class="line">                &#125;<span class="built_in">else</span>&#123;</div><div class="line">                    checkRem.<span class="built_in">put</span>(<span class="built_in">position</span>,false);</div><div class="line">                    &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line"><span class="comment">// 这句要写在监听后面</span></div><div class="line">box.setChecked(checkRem.<span class="built_in">get</span>(<span class="built_in">position</span>));</div></pre></td></tr></table></figure>
+</li>
+<li><ol>
+<li><code>mCachedViews</code> 用于缓存屏幕外的<code>itemView</code>，默认缓存两个，当滑回来的时候，并不会执行<code>onBindViewHolder</code>，更别提<code>onCreateViewHolder</code>了。（二级缓存）</li>
+</ol>
+</li>
+<li><ol>
+<li><code>mViewCacheExtension</code> 需要我们自己实现，默认是没有的，（三级缓存）</li>
+</ol>
+</li>
+<li><ol>
+<li><code>mRecyclerPool</code> 四级缓存，默认缓存五个，可以由多个RecyclerView共享，其实<code>mRecyclerPool</code>的内部维护了一个<code>Map</code>，里面以不同的<code>viewType</code>为Key存储了各自对应的<code>ViewHolder</code>集合。可以通过提供的方法来修改内部缓存的<code>Viewholder</code>。可以根据<code>viewType</code>得到对应的<code>itemView</code>，如下代码，</li>
+</ol>
+</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> ViewHolder getRecycledView(int viewType) &#123;</div><div class="line">            <span class="keyword">final</span> ScrapData scrapData = mScrap.<span class="keyword">get</span>(viewType);</div><div class="line">            <span class="keyword">if</span> (scrapData != <span class="literal">null</span> &amp;&amp; !scrapData.mScrapHeap.isEmpty()) &#123;</div><div class="line">                <span class="keyword">final</span> ArrayList&lt;ViewHolder&gt; scrapHeap = scrapData.mScrapHeap;</div><div class="line">                <span class="keyword">return</span> scrapHeap.remove(scrapHeap.size() - <span class="number">1</span>);</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">return</span> <span class="literal">null</span>;</div><div class="line">        &#125;</div></pre></td></tr></table></figure>
+<p>也可以为 某个特定的<code>viewType</code>设置缓存数量,方法<code>setMaxRecycledViews</code>，即可,不缓存某种就设<code>max</code>为0</p>
+<figure class="highlight processing"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">void</span> setMaxRecycledViews(<span class="built_in">int</span> viewType, <span class="built_in">int</span> <span class="built_in">max</span>) &#123;</div><div class="line">    ScrapData scrapData = getScrapDataForType(viewType);</div><div class="line">    scrapData.mMaxScrap = <span class="built_in">max</span>;</div><div class="line">    <span class="keyword">final</span> ArrayList&lt;ViewHolder&gt; scrapHeap = scrapData.mScrapHeap;</div><div class="line">    <span class="keyword">if</span> (scrapHeap != <span class="keyword">null</span>) &#123;</div><div class="line">        <span class="keyword">while</span> (scrapHeap.<span class="built_in">size</span>() &gt; <span class="built_in">max</span>) &#123;</div><div class="line">            scrapHeap.remove(scrapHeap.<span class="built_in">size</span>() - <span class="number">1</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="怎么从缓存中读？"><a href="#怎么从缓存中读？" class="headerlink" title="怎么从缓存中读？"></a>怎么从缓存中读？</h4><p>依次从这四级缓存中取，如果都没有的话，只能重走<code>onCreateViewHolder</code>和<code>onBindViewHolder</code>了。</p>
+<h4 id="怎么写入缓存？"><a href="#怎么写入缓存？" class="headerlink" title="怎么写入缓存？"></a>怎么写入缓存？</h4><p><code>mAttachedScrap</code>用于复用屏幕内的itemView，源码中具体存储的其实是正在执行remove操作的ItemView。这个前文说过。</p>
+<p>正常滚动的写入逻辑是：首先判断集合mCachedViews是否满了，</p>
+<p>如果已满就从mCachedViews集合中移出一个到mRecyclerPool集合中去，再把新的ItemView添加到mCachedViews集合；</p>
+<p>如果不满就将ItemView直接添加到mCachedViews集合。 </p>
+<h4 id="缓存的是啥"><a href="#缓存的是啥" class="headerlink" title="缓存的是啥"></a>缓存的是啥</h4><p><strong>View + ViewHolder(避免每次createView时调用findViewById) + flag(标识状态)；</strong></p>
+<p>RecyclerView中通过postion获取的是viewholder，即pos ——&gt; (view，viewHolder，flag)；标志flag的作用是判断view是否需要重新bindView，这也是RecyclerView实现局部刷新的一个核心.</p>
+<p>其他的也不多说了，源码啥的文中也没贴，太长。</p>
 
       
     </div>
@@ -381,9 +440,9 @@
           
             <a href="/tags/Android/" rel="tag"># Android</a>
           
-            <a href="/tags/ListView/" rel="tag"># ListView</a>
+            <a href="/tags/RecyclerView/" rel="tag"># RecyclerView</a>
           
-            <a href="/tags/CheckBox/" rel="tag"># CheckBox</a>
+            <a href="/tags/ViewHolder/" rel="tag"># ViewHolder</a>
           
         </div>
       
@@ -396,15 +455,15 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2017/10/17/RecyclerView嵌套GridView的坑/" rel="next" title="RecyclerView嵌套GridView的坑">
+                <i class="fa fa-chevron-left"></i> RecyclerView嵌套GridView的坑
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/09/24/带箭头的ArrowTextView实现方法之一/" rel="prev" title="带箭头的ArrowTextView实现方法之一">
-                带箭头的ArrowTextView实现方法之一 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -555,7 +614,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#出现的问题"><span class="nav-number">1.</span> <span class="nav-text">出现的问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决方式"><span class="nav-number">2.</span> <span class="nav-text">解决方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#部分代码"><span class="nav-number">3.</span> <span class="nav-text">部分代码</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前文"><span class="nav-number">1.</span> <span class="nav-text">前文</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#正文"><span class="nav-number">2.</span> <span class="nav-text">正文</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#怎么从缓存中读？"><span class="nav-number">2.1.</span> <span class="nav-text">怎么从缓存中读？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#怎么写入缓存？"><span class="nav-number">2.2.</span> <span class="nav-text">怎么写入缓存？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#缓存的是啥"><span class="nav-number">2.3.</span> <span class="nav-text">缓存的是啥</span></a></li></ol></li></ol></div>
             
 
           </div>
