@@ -178,10 +178,9 @@ case MotionEvent.ACTION_UP: {
 主要就是在UP事件发生时，判断滑动距离，看是否是切到下一页，还是上一页，还是滑回原样。
 
 ```
-ObjectAnimator.ofInt(this, "scrollX", map.get(++nowChild)).setDuration(duration).start();`
-`ObjectAnimator
+ObjectAnimator.ofInt(this, "scrollX", map.get(++nowChild)).setDuration(duration).start();
 ``` 
-动画一句话搞定
+`ObjectAnimator`动画一句话搞定
 
 基本实现需求，不多说了~看看效果吧(gif录得不好。。)：
 ![](http://oi5p36v0h.bkt.clouddn.com/ezgif.com-gif-maker.gif)
