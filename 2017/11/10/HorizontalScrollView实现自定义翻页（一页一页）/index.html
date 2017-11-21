@@ -78,7 +78,7 @@
 <meta property="og:description" content="HorizontalScrollView实现自定义翻页（一页一页）非ScrollTo方法">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://oi5p36v0h.bkt.clouddn.com/ezgif.com-gif-maker.gif">
-<meta property="og:updated_time" content="2017-11-21T08:50:51.000Z">
+<meta property="og:updated_time" content="2017-11-21T09:00:54.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="HorizontalScrollView实现自定义翻页（一页一页）">
 <meta name="twitter:description" content="HorizontalScrollView实现自定义翻页（一页一页）非ScrollTo方法">
@@ -365,9 +365,8 @@
 <p>比较核心的代码就是下面这些哈：</p>
 <figure class="highlight kotlin"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">case MotionEvent.ACTION_UP: &#123;</div><div class="line">                Log.d(<span class="string">"log"</span>, <span class="string">"up x="</span> + ev.getX());</div><div class="line">                <span class="keyword">if</span> (downX - ev.getX() &gt; getSlidGap()) &#123;</div><div class="line">                    <span class="keyword">if</span> (nowChild &lt;= childCout - <span class="number">2</span>) &#123;</div><div class="line">                        ObjectAnimator.ofInt(<span class="keyword">this</span>, <span class="string">"scrollX"</span>, map.<span class="keyword">get</span>(++nowChild)).setDuration(duration).start();</div><div class="line">                        isScroll = <span class="literal">true</span>;</div><div class="line">                    &#125;</div><div class="line">                &#125; <span class="keyword">else</span> <span class="keyword">if</span> (downX - ev.getX() &lt; -getSlidGap()) &#123;</div><div class="line">                    <span class="keyword">if</span> (nowChild &gt;= <span class="number">1</span>) &#123;</div><div class="line">                        ObjectAnimator.ofInt(<span class="keyword">this</span>, <span class="string">"scrollX"</span>, map.<span class="keyword">get</span>(--nowChild)).setDuration(duration).start();</div><div class="line">                        isScroll = <span class="literal">true</span>;</div><div class="line">                    &#125;</div><div class="line">                &#125; <span class="keyword">else</span> &#123;</div><div class="line">                    ObjectAnimator.ofInt(<span class="keyword">this</span>, <span class="string">"scrollX"</span>, map.<span class="keyword">get</span>(nowChild)).setDuration(duration).start();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">break</span>;</div></pre></td></tr></table></figure>
 <p>主要就是在UP事件发生时，判断滑动距离，看是否是切到下一页，还是上一页，还是滑回原样。</p>
-<pre><code>ObjectAnimator.ofInt(this, &quot;scrollX&quot;, map.get(++nowChild)).setDuration(duration).start();`
-`ObjectAnimator
-</code></pre><p>动画一句话搞定</p>
+<pre><code>ObjectAnimator.ofInt(this, &quot;scrollX&quot;, map.get(++nowChild)).setDuration(duration).start();
+</code></pre><p><code>ObjectAnimator</code>动画一句话搞定</p>
 <p>基本实现需求，不多说了~看看效果吧(gif录得不好。。)：<br><img src="http://oi5p36v0h.bkt.clouddn.com/ezgif.com-gif-maker.gif" alt=""></p>
 
       
