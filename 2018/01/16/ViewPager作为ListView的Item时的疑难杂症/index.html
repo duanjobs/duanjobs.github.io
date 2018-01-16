@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="ViewPager, ListView, Item" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="ViewPager作为ListView的Item时,划出屏幕再划回来会有什么刺激的表现">
+<meta name="keywords" content="ViewPager, ListView, Item">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ViewPager作为ListView的Item时的疑难杂症">
+<meta property="og:url" content="https://duanjobs.github.io/2018/01/16/ViewPager作为ListView的Item时的疑难杂症/index.html">
+<meta property="og:site_name" content="duanJobs Home">
+<meta property="og:description" content="ViewPager作为ListView的Item时,划出屏幕再划回来会有什么刺激的表现">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-01-16T07:28:00.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ViewPager作为ListView的Item时的疑难杂症">
+<meta name="twitter:description" content="ViewPager作为ListView的Item时,划出屏幕再划回来会有什么刺激的表现">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://duanjobs.github.io/2018/01/16/ViewPager作为ListView的Item时的疑难杂症/"/>
+
+
+
+
+
+  <title>ViewPager作为ListView的Item时的疑难杂症 | duanJobs Home</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">duanJobs Home</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">duanJobs的博客</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://duanjobs.github.io/2018/01/16/ViewPager作为ListView的Item时的疑难杂症/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="duanJobs">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="duanJobs Home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">ViewPager作为ListView的Item时的疑难杂症</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-16T14:06:16+08:00">
+                2018-01-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+              <div class="post-description">
+                  ViewPager作为ListView的Item时,划出屏幕再划回来会有什么刺激的表现
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="前文"><a href="#前文" class="headerlink" title="前文"></a>前文</h3><p>长复杂页面在项目中采用<code>listview</code>实现的形式，利用<code>mergeAdapter</code>来对界面做控制，偏偏有个<code>itemView</code> 是<code>viewpager</code>的形式，于是该<code>itemView</code>里有个<code>ViewPager</code>作为子<code>view</code>来做横滑操作。做出后，看上去很美。但是，突然发现当该<code>item</code>划出屏幕，再划回来的时候，第一次切换<code>viewPager</code>总会秒切，而且不丝滑，但之后的切换操作并无什么异常，都很丝滑。强迫症受不了，必须搞。而且只在7.x的版本上有问题，在4.X，6.X上都很perfect。</p>
+<h3 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h3><ul>
+<li><strong>首先是冥想阶段</strong></li>
+</ul>
+<ol>
+<li>既然和划出屏幕有关系，那么可以认为：<code>listView</code>的<code>Item</code>回收机制造成的影响。</li>
+<li>可能是<code>ViewPager</code>在划出划回的状态有问题。</li>
+</ol>
+<h3 id="排查阶段"><a href="#排查阶段" class="headerlink" title="排查阶段"></a>排查阶段</h3><ul>
+<li><p>先看看<code>ViewPager</code> 的<code>OnPageChangeListener</code> 在正常与异常情况下切换时回调的状态。发现在<code>onPageScrollStateChanged</code>的回调中，异常状态少了 <code>IDLE</code>（0） 和<code>SETTLING</code> （2），只有<code>DRAGGING</code>（1）。</p>
+</li>
+<li><p>查看源码 <code>IDLE</code>（0） 只在<code>smoothScrollTo</code>方法中设置过此状态，依次上溯，发现在<code>setCurrentItemInternal</code>方法中有代码块：</p>
+</li>
+</ul>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> (mFirstLayout) &#123;</div><div class="line">            </div><div class="line">   mCurItem = <span class="built_in">item</span>;</div><div class="line">   <span class="keyword">if</span> (dispatchSelected) &#123;</div><div class="line">       dispatchOnPageSelected(<span class="built_in">item</span>);</div><div class="line">   &#125;</div><div class="line">   requestLayout();</div><div class="line">   &#125; <span class="keyword">else</span> &#123;</div><div class="line">       populate(<span class="built_in">item</span>);</div><div class="line">       scrollToItem(<span class="built_in">item</span>, smoothScroll, velocity, dispatchSelected);</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
+<ul>
+<li>很大概率是此代码块的<code>if else</code> 语句造成的，换言之就是 <code>mFirstLayout</code> 变量造成的。打个断点试试看！</li>
+<li><p>哇，果然是 当划出屏幕后再回来 走的是 <code>mFirstLayout＝true</code>，而正常情况下则是走的<code>else</code>方法。</p>
+</li>
+<li><p>接下来看看 <code>mFirstLayout</code>在哪被赋值过。</p>
+</li>
+</ul>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">setAdapter</span><span class="params">(PagerAdapter adapter)</span> </span>&#123;</div><div class="line">    ...</div><div class="line">    mFirstLayout = <span class="keyword">true</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">void</span> <span class="title">onAttachedToWindow</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">super</span>.onAttachedToWindow();</div><div class="line">    mFirstLayout = <span class="keyword">true</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">void</span> <span class="title">onLayout</span><span class="params">(<span class="keyword">boolean</span> changed, <span class="keyword">int</span> l, <span class="keyword">int</span> t, <span class="keyword">int</span> r, <span class="keyword">int</span> b)</span> </span>&#123;</div><div class="line">    ...</div><div class="line">    mFirstLayout = <span class="keyword">false</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>mFirstLayout在上述方法中赋值过，那么问题就显而易见了。</strong></p>
+<p><strong>原因：当该<code>itemView</code>被划出屏幕时，会被<code>detach</code>掉，再划回来则会走<code>onAttachedToWindow</code>方法，此时<code>mFirstLayout</code>被设置为<code>true</code>，所以在划回来，第一次切换时会造成前文提到的情况。</strong></p>
+<p><strong>解决方案也随之出现(回字有几种写法？)：</strong></p>
+<ol>
+<li>设置<code>viewpager</code>的<code>OnAttachStateChangeListener</code>侦听，在<code>onViewAttachedToWindow</code>回调中，调用<code>ViewPager.requestLayout()</code>;方法将<code>mFirstLayout</code> 置为<code>false</code>。（对应<code>onLayout</code>）</li>
+<li>利用反射，在<code>onViewAttachedToWindow</code>回调中，将<code>mFirstLayout</code>置为<code>false</code>。这个方法有人会有疑问就是 那岂不是在第一次<code>onViewAttachedToWindow</code>的时候<code>mFirstLayout</code>也为<code>false</code>？答案是<code>yes</code>，但是别忘了，<code>setAdapter</code>里会置为<code>true</code>。往往我们第一次<code>onViewAttachedToWindow</code>之后都会给<code>ViewPager</code> <code>setAdapter</code> 啊。所以整体还是对的。</li>
+<li>投机取巧法。当<code>itemView</code>划出时调用两次<code>setCurrentItem（currentItem）</code>方法，这样第二次就走<code>else</code>的代码了。但是此方法需要写的代码有点多，而且罗嗦，耦合高，我压根就没试。</li>
+</ol>
+<p><strong>方法一：</strong></p>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">viewPager.addOnAttachStateChangeListener(<span class="keyword">new</span> OnAttachStateChangeListener() &#123;</div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">onViewAttachedToWindow</span><span class="params">(View v)</span> </span>&#123;</div><div class="line">                viewPager.requestLayout();</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">onViewDetachedFromWindow</span><span class="params">(View v)</span> </span>&#123;</div><div class="line"></div><div class="line">            &#125;</div><div class="line">        &#125;);</div></pre></td></tr></table></figure>
+<p><strong>方法二：</strong></p>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">viewPager.addOnAttachStateChangeListener(<span class="keyword">new</span> OnAttachStateChangeListener() &#123;</div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">onViewAttachedToWindow</span><span class="params">(View v)</span> </span>&#123;</div><div class="line">               resetFirstLayout();</div><div class="line">            &#125;</div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">onViewDetachedFromWindow</span><span class="params">(View v)</span> </span>&#123;</div><div class="line"></div><div class="line">            &#125;</div><div class="line">        &#125;);</div></pre></td></tr></table></figure>
+<p><code>resetFirstLayout</code>的主要语句为：</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">Field mFirstLayout</span> = ViewPager.class.getDeclaredField(<span class="string">"mFirstLayout"</span>);</div></pre></td></tr></table></figure>
+<p><code>mFirstLayout.setAccessible(true);</code><br><code>mFirstLayout.set(viewPager, false);</code><br>(这两句加到代码块生成不了html，蛋疼，拿出来意会就好)</p>
+<p>好了，就这么多吧。。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag"># Android</a>
+          
+            <a href="/tags/ListView/" rel="tag"># ListView</a>
+          
+            <a href="/tags/ViewPager/" rel="tag"># ViewPager</a>
+          
+            <a href="/tags/复用/" rel="tag"># 复用</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/01/16/kotlin实践之干货集中营客户端/" rel="next" title="kotlin实践之干货集中营客户端">
+                <i class="fa fa-chevron-left"></i> kotlin实践之干货集中营客户端
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          
+            <img class="site-author-image" itemprop="image"
+              src="/images/avatar.jpeg"
+              alt="duanJobs" />
+          
+            <p class="site-author-name" itemprop="name">duanJobs</p>
+            <p class="site-description motion-element" itemprop="description">只要在走就是对的</p>
+        </div>
+
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/duanjobs" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>GitHub</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:duanjobs@gmail.com" target="_blank" title="E-Mail">
+                  
+                    <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前文"><span class="nav-number">1.</span> <span class="nav-text">前文</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分析"><span class="nav-number">2.</span> <span class="nav-text">分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#排查阶段"><span class="nav-number">3.</span> <span class="nav-text">排查阶段</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">duanJobs</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.2</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.2"></script>
+
+
+
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
