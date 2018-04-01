@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="翻页, FlipPageView" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="支持手势翻页的FlipPageView，可用于考试，读书等">
+<meta name="keywords" content="翻页, FlipPageView">
+<meta property="og:type" content="article">
+<meta property="og:title" content="支持手势翻页的FlipPageView">
+<meta property="og:url" content="https://duanjobs.github.io/2018/03/10/支持手势翻页的FlipPageView/index.html">
+<meta property="og:site_name" content="duanJobs Home">
+<meta property="og:description" content="支持手势翻页的FlipPageView，可用于考试，读书等">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://oi5p36v0h.bkt.clouddn.com/ezgif.com-video-to-gif.gif">
+<meta property="og:updated_time" content="2018-04-01T05:52:46.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="支持手势翻页的FlipPageView">
+<meta name="twitter:description" content="支持手势翻页的FlipPageView，可用于考试，读书等">
+<meta name="twitter:image" content="http://oi5p36v0h.bkt.clouddn.com/ezgif.com-video-to-gif.gif">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://duanjobs.github.io/2018/03/10/支持手势翻页的FlipPageView/"/>
+
+
+
+
+
+  <title>支持手势翻页的FlipPageView | duanJobs Home</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">duanJobs Home</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">duanJobs的博客</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://duanjobs.github.io/2018/03/10/支持手势翻页的FlipPageView/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="duanJobs">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="duanJobs Home">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">支持手势翻页的FlipPageView</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-10T11:55:14+08:00">
+                2018-03-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+              <div class="post-description">
+                  支持手势翻页的FlipPageView，可用于考试，读书等
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h3><p>在版本迭代中，产品需要上线考试，测验的模块，而且考试模块以后是主要的模块，考题一题题的翻页，可手势，也可按钮下一页。于是乎，必须得写一个支持此种操作的控件，而且还要考虑到以后的扩展性。</p>
+<h3 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h3><p>1.必须要支持上下横滑，以及左右滑动翻页。</p>
+<p>2.考虑到扩展性，不应当将具体页面（例如考题页面）耦合进该控件中。</p>
+<p>3.尽可能的考虑到性能。</p>
+<h3 id="总体思路"><a href="#总体思路" class="headerlink" title="总体思路"></a>总体思路</h3><p>那么，这个空间应包含 <code>mCurPage</code> 和 <code>mTogglePage</code> 两个子view，滑动切换时，更新相应view的内容，避免创建过多的view，尽量提高性能。</p>
+<p>进一步地，为了支持上下滑操作，可以让上述两个view继承自<code>ScrollView</code>。</p>
+<p>翻页操作时，将创建页面view的操作<code>creatView</code>作为接口暴露出去，这样就降低了耦合，可以对页面进行自己的定制。</p>
+<h3 id="关键代码"><a href="#关键代码" class="headerlink" title="关键代码"></a>关键代码</h3><p>话不多说，看看关键代码</p>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"> <span class="comment">/**</span></div><div class="line"><span class="comment"> * Page的container view，支持Scroll</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">PageContainerView</span> <span class="keyword">extends</span> <span class="title">ScrollView</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> FrameLayout mContainer;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">PageContainerView</span><span class="params">(Context context)</span> </span>&#123;</div><div class="line">        <span class="keyword">super</span>(context);</div><div class="line">        setFillViewport(<span class="keyword">true</span>);</div><div class="line"></div><div class="line">        mContainer = <span class="keyword">new</span> FrameLayout(getContext());</div><div class="line">        mContainer.setClickable(<span class="keyword">true</span>);</div><div class="line">        addView(mContainer);</div><div class="line"></div><div class="line">        setVerticalScrollBarEnabled(<span class="keyword">false</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">public</span> <span class="function">View <span class="title">getPageView</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="function"><span class="keyword">return</span> mContainer.<span class="title">getChildAt</span><span class="params">(<span class="number">0</span>)</span></span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">setPageView</span><span class="params">(View page)</span> </span>&#123;</div><div class="line">        scrollTo(<span class="number">0</span>,<span class="number">0</span>);</div><div class="line">        mContainer.addView(page);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">removePageView</span><span class="params">()</span> </span>&#123;</div><div class="line">        mContainer.removeAllViews();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">boolean</span> <span class="title">checkScrollViewDraged</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">boolean</span> draged = <span class="keyword">false</span>;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            Class scrollClass = ScrollView.class;</div><div class="line">            Field draggingField = scrollClass.getDeclaredField(<span class="string">"mIsBeingDragged"</span>);</div><div class="line">            draggingField.setAccessible(<span class="keyword">true</span>);</div><div class="line">            draged = draggingField.getBoolean(<span class="keyword">this</span>);</div><div class="line">        &#125;<span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> draged;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>上面这段代码就是FlipPageView的子view，继承自ScrollView，逻辑很简单，就是将页面view 添加或者移除，其中还有个判断是否拖动的反射操作，这个之后在检测手势的时候会用到。</p>
+<figure class="highlight axapta"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">FlipPageListener</span> </span>&#123;</div><div class="line">    <span class="keyword">public</span> View onCreatePage(View oldpage,<span class="keyword">int</span> <span class="keyword">index</span>);</div><div class="line">    <span class="keyword">public</span> <span class="keyword">void</span> onPageChanged(View newpage,<span class="keyword">int</span> <span class="keyword">index</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>上面是FlipPageView的回调，主要是创建和翻页的回调，创建时，会把oldpage回传，如果oldpage不为空，则可以直接拿来用，不需要创建新的view再添加进来。</p>
+<p>在写一个功能时，不得已采用方案：<code>RecyclerView</code>嵌套<code>GridView</code>，于是乎，坑来了。</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div></pre></td><td class="code"><pre><div class="line">@Override</div><div class="line">   <span class="function"><span class="keyword">public</span> boolean <span class="title">dispatchTouchEvent</span>(<span class="params">MotionEvent <span class="keyword">event</span></span>) </span>&#123;</div><div class="line">       <span class="keyword">if</span>(!allowGesture)</div><div class="line">           <span class="keyword">return</span> super.dispatchTouchEvent(<span class="keyword">event</span>);</div><div class="line">       boolean handled = <span class="literal">false</span>;</div><div class="line">       <span class="keyword">int</span> action = <span class="keyword">event</span>.getAction();</div><div class="line"></div><div class="line">       checkPageIndexValid();</div><div class="line">       <span class="keyword">if</span>(mVelocityTracker == <span class="literal">null</span>) &#123;</div><div class="line">           mVelocityTracker = VelocityTracker.obtain();</div><div class="line">       &#125;</div><div class="line">       mVelocityTracker.addMovement(<span class="keyword">event</span>);</div><div class="line"></div><div class="line">       <span class="keyword">switch</span>(action) &#123;</div><div class="line">           <span class="keyword">case</span> MotionEvent.ACTION_DOWN: &#123;</div><div class="line"></div><div class="line">               stopScrollPage();</div><div class="line"></div><div class="line">               mScrollStartX = <span class="number">0</span>;</div><div class="line">               mPageDragged = <span class="literal">false</span>;</div><div class="line">               mFlipTo = PageFlipTo.NONE;</div><div class="line">               mGesture = Gesture.NONE;</div><div class="line">               mLastPointX = mCurPointX = mInitPointX = <span class="keyword">event</span>.getX();</div><div class="line">           &#125;</div><div class="line">           <span class="keyword">break</span>;</div><div class="line"></div><div class="line">           <span class="keyword">case</span> MotionEvent.ACTION_MOVE: &#123;</div><div class="line"></div><div class="line">               mCurPointX = <span class="keyword">event</span>.getX();</div><div class="line"></div><div class="line">               <span class="keyword">if</span>(mGesture == Gesture.NONE) &#123;</div><div class="line">                   <span class="keyword">if</span>(mCurPage.checkScrollViewDraged()) &#123;</div><div class="line">                       mGesture = Gesture.VERTICAL;</div><div class="line">                   &#125;<span class="keyword">else</span> <span class="keyword">if</span>(checkPageDraged(<span class="keyword">event</span>)) &#123;</div><div class="line">                       mGesture = Gesture.HORIZONTAL;</div><div class="line">                   &#125;</div><div class="line">               &#125;</div><div class="line"></div><div class="line">               <span class="keyword">if</span>(mGesture == Gesture.HORIZONTAL) &#123;</div><div class="line">                   checkPageDraged(<span class="keyword">event</span>);</div><div class="line">                   <span class="keyword">if</span>(checkPageFlipTo(<span class="keyword">event</span>)) &#123;</div><div class="line">                       dragPage();</div><div class="line">                   &#125;</div><div class="line">                   handled = <span class="literal">true</span>;</div><div class="line">               &#125;</div><div class="line"></div><div class="line">               mLastPointX = mCurPointX;</div><div class="line">           &#125;</div><div class="line">           <span class="keyword">break</span>;</div><div class="line"></div><div class="line">           <span class="keyword">case</span> MotionEvent.ACTION_CANCEL:</div><div class="line">           <span class="keyword">case</span> MotionEvent.ACTION_UP: &#123;</div><div class="line"></div><div class="line">               mVelocityTracker.computeCurrentVelocity(<span class="number">1000</span>);</div><div class="line">               <span class="keyword">float</span> velocity = mVelocityTracker.getXVelocity();</div><div class="line">               <span class="keyword">if</span>(mVelocityTracker != <span class="literal">null</span>) &#123;</div><div class="line">                   mVelocityTracker.recycle();</div><div class="line">                   mVelocityTracker = <span class="literal">null</span>;</div><div class="line">               &#125;</div><div class="line"></div><div class="line">               <span class="keyword">if</span>(mPageDragged) &#123;</div><div class="line">                   <span class="keyword">if</span>(!checkFlingPage(velocity)) &#123;</div><div class="line">                       checkScrollPage();</div><div class="line">                   &#125;</div><div class="line">               &#125;</div><div class="line">               handled = mGesture == Gesture.HORIZONTAL ? <span class="literal">true</span> : handled;</div><div class="line">           &#125;</div><div class="line">       &#125;</div><div class="line"></div><div class="line">       <span class="keyword">if</span>(!handled) &#123;</div><div class="line">           handled = super.dispatchTouchEvent(<span class="keyword">event</span>);</div><div class="line">       &#125;</div><div class="line">       <span class="keyword">return</span> handled;</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
+<p>上面这个函数是熟悉的时间分发函数，刚开始回判断是否支持手势翻页，不支持则不拦截。</p>
+<p>在<code>ACTION_MOVE</code>里会判断手势的方向，如果是横滑操作，则进行滑动判断，如下：</p>
+<figure class="highlight nix"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * 检查页面切换，上一页 or 下一页</span></div><div class="line"><span class="comment"> * @param event</span></div><div class="line"><span class="comment"> * @return true: 能滑动; false: 不能滑动</span></div><div class="line"><span class="comment"> */</span></div><div class="line">private boolean checkPageFlipTo(MotionEvent event) &#123;</div><div class="line">    boolean <span class="attr">canflip</span> = <span class="literal">false</span>;</div><div class="line">    PageFlipTo <span class="attr">original</span> = mFlipTo;</div><div class="line"></div><div class="line">    <span class="keyword">if</span>(mCurPointX &gt;= mInitPointX) &#123;</div><div class="line">        <span class="attr">mFlipTo</span> = PageFlipTo.PREVIOUS;</div><div class="line">    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(mCurPointX &lt; mInitPointX) &#123;</div><div class="line">        <span class="attr">mFlipTo</span> = PageFlipTo.NEXT;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span>(<span class="attr">mFlipTo</span> == PageFlipTo.PREVIOUS) &#123;</div><div class="line">        <span class="attr">canflip</span> = mPageIndex - <span class="number">1</span> &lt; <span class="number">0</span> ? <span class="literal">false</span> : <span class="literal">true</span>;</div><div class="line">    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(<span class="attr">mFlipTo</span> == PageFlipTo.NEXT) &#123;</div><div class="line">        <span class="attr">canflip</span> = mPageIndex + <span class="number">1</span> &gt;= mPageCount ? <span class="literal">false</span> : <span class="literal">true</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">if</span>(canflip &amp;&amp; original != mFlipTo) &#123;</div><div class="line">        flipPageInit();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">if</span>(!canflip) &#123;</div><div class="line">        <span class="attr">mPageDragged</span> = <span class="literal">false</span>;</div><div class="line">        <span class="attr">mInitPointX</span> = event.getX();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    return canflip;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>主要是判断是上一页还是下一页相关，然后根据判断，进行翻页的初始化操作 <code>flipPageInit()</code></p>
+<figure class="highlight haxe"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment">  * 翻页初始化</span></div><div class="line"><span class="comment">  */</span></div><div class="line"> <span class="keyword">private</span> void flipPageInit() &#123;</div><div class="line">     View <span class="keyword">new</span><span class="type">Page</span>;</div><div class="line">     int pageindex;</div><div class="line"></div><div class="line">     <span class="keyword">if</span>(mFlipPageListener == <span class="literal">null</span>) &#123;</div><div class="line">         <span class="keyword">return</span>;</div><div class="line">     &#125;</div><div class="line"></div><div class="line">     <span class="keyword">if</span>(mFlipTo == PageFlipTo.PREVIOUS) &#123;</div><div class="line">         pageindex = mPageIndex - <span class="number">1</span> &lt; <span class="number">0</span> ? <span class="number">0</span> : <span class="type">mPageIndex - 1</span>;</div><div class="line"></div><div class="line">         <span class="keyword">new</span><span class="type">Page</span> = mFlipPageListener.onCreatePage(mRecyclePageView, pageindex);</div><div class="line">         setPageView(mTogglePage,<span class="keyword">new</span><span class="type">Page</span>);</div><div class="line">         mTogglePage.setX(-mPageWidth);</div><div class="line">         mCurPage.setX(<span class="number">0</span>);</div><div class="line"></div><div class="line">         mMovePage = mTogglePage;</div><div class="line">     &#125;<span class="keyword">else</span> <span class="keyword">if</span>(mFlipTo == PageFlipTo.NEXT) &#123;</div><div class="line">         pageindex = mPageIndex + <span class="number">1</span> &gt;= mPageCount ? mPageCount - <span class="number">1</span> : <span class="type">mPageIndex </span>+ <span class="number">1</span>;</div><div class="line"></div><div class="line">         <span class="keyword">new</span><span class="type">Page</span> = mFlipPageListener.onCreatePage(mRecyclePageView, pageindex);</div><div class="line">         setPageView(mTogglePage,<span class="keyword">new</span><span class="type">Page</span>);</div><div class="line">         mTogglePage.setX(<span class="number">0</span>);</div><div class="line">         mCurPage.setX(<span class="number">0</span>);</div><div class="line"></div><div class="line">         mMovePage = mCurPage;</div><div class="line">     &#125;</div><div class="line">     mMovePage.bringToFront();</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
+<p>上面代码就是进行翻页的初始化，主要是进行页面的创建和摆放位置，逻辑较简单。</p>
+<p>其他代码则是辅助代码，整个的代码逻辑大体都在上面。</p>
+<p>当然还有支持按钮翻页的则比较简单，就是利用 <code>Scroller</code> 进行页面的切换，具体代码不贴了。</p>
+<p>具体代码在这 <a href="https://github.com/duanjobs/SomeThingMine" target="_blank" rel="external">点我</a></p>
+<p>效果</p>
+<p><img src="http://oi5p36v0h.bkt.clouddn.com/ezgif.com-video-to-gif.gif" alt="image"></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag"># Android</a>
+          
+            <a href="/tags/FlipPageView/" rel="tag"># FlipPageView</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/01/16/ViewPager作为ListView的Item时的疑难杂症/" rel="next" title="ViewPager作为ListView的Item时的疑难杂症">
+                <i class="fa fa-chevron-left"></i> ViewPager作为ListView的Item时的疑难杂症
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          
+            <img class="site-author-image" itemprop="image"
+              src="/images/avatar.jpeg"
+              alt="duanJobs" />
+          
+            <p class="site-author-name" itemprop="name">duanJobs</p>
+            <p class="site-description motion-element" itemprop="description">只要在走就是对的</p>
+        </div>
+
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/duanjobs" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>GitHub</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:duanjobs@gmail.com" target="_blank" title="E-Mail">
+                  
+                    <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#需求"><span class="nav-number">1.</span> <span class="nav-text">需求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#思考"><span class="nav-number">2.</span> <span class="nav-text">思考</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总体思路"><span class="nav-number">3.</span> <span class="nav-text">总体思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关键代码"><span class="nav-number">4.</span> <span class="nav-text">关键代码</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">duanJobs</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.2</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.2"></script>
+
+
+
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
